@@ -12,9 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 The force-length relationship of muscle function is directly related to actin-myosin overlap in sacromere -- the limited formation of cross bridges due to attachment range. The maximal isometric force produced is directly related to cross bridges formation. 
 
-The human upper limb transect a lever system, though the mechanical advantage (MA) that predicts the amount of output transmitted by the input force generally accords to 0.2 in the system. This indicates that any force applied to the in-level results in 20% of that force at the end of the out-level. However, because the angle changes as the forearm rotates, the output is not entirely predictable by MA alone. According to paper on uncovering the FL relationships of the input muscles (@article{rassier1999length), physiologists Rassier, Macintosh, and Herzog have found that studying the force produced by a biomechanical system can still be useful. As a result, we underline the assumption that the force we measure at the hand as the muscle produces isometric force at various lengths is a reasonable reflection of the FL relationship in this study.
+The human upper limb transect a lever system, though the mechanical advantage (MA) that predicts the amount of output transmitted by the input force generally accords to 0.2 in the system. This indicates that any force applied to the in-level results in 20% of that force at the end of the out-level. However, because the angle changes as the forearm rotates, the output is not entirely predictable by MA alone. According to paper on uncovering the FL relationships of the input muscles (@rassier1999length), physiologists Rassier, Macintosh, and Herzog have found that studying the force produced by a biomechanical system can still be useful. As a result, we underline the assumption that the force we measure at the hand as the muscle produces isometric force at various lengths is a reasonable reflection of the FL relationship in this study.
 
-It has previously been shown in the article by Yeung and Yeung in 2008 that the force/torque-length/angle relationship shifts soon after and long after eccentric fatigue (@article{yeung2007shift). In this study, we aim to continue investigating th e FL relationship within the human upper limb, particularly honing in on the forearm flexors and their response to eccentric fatigue:
+It has previously been shown in the article by Yeung and Yeung in 2008 that the force/torque-length/angle relationship shifts soon after and long after eccentric fatigue (@yeung2007shift). In this study, we aim to continue investigating th e FL relationship within the human upper limb, particularly honing in on the forearm flexors and their response to eccentric fatigue:
   1) Does the isometric maximum voluntary contraction (MVC) force-angle data across the entire class align with a standard FL relationship, both in control and fatigued states?
   2) Is there a significant difference in the θmax between the FL relationships of the control and fatigue conditions?
 
@@ -44,14 +44,116 @@ After each person fatigue their flexors, wait 2 min. Then repeat the experiment 
 
 
 ## Results
-```{r cars}
-summary(cars)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(MuMIn)
+library(ggplot2)
+library(knitr)
+library(dplyr)
 ```
 
-## Discussion
+```{r read in data and normalize the data, include=FALSE}
+f <- list.files("new_data", pattern = ".csv", full.names=TRUE)
+dat.l <- list()
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+for(i in f){
+  met.dat<- unlist(strsplit(i,"_"))
+  name <- met.dat[3]
+  activity <- met.dat[4]
+  angle <- as.numeric(gsub(".csv","", met.dat[5]))
+  dat.l[[i]]<- read_csv(i) %>%
+  mutate(name = name, angle = angle, activity = activity)
+}
+
+dat <- do.call(rbind,dat.l)
+
+data_after_filter<-dat%>%
+filter(!(name=="letiacianna" | name=="leticianna" & activity %in% c("fatigue","control")))%>%
+  group_by(activity)%>%
+  mutate(normF=abs(force/max(force)))
+```
+
+```{r plotting the mean normf  max versus agnle for the control and fatigue, echo= FALSE}
+
+mean_normalized_maxF<-data_after_filter%>%
+  group_by(angle,activity)%>%
+  summarize(Mean_Normalized_maxf=mean(normF))
+
+mean_normalized_maxF%>% 
+  ggplot(aes(x=angle,y=Mean_Normalized_maxf,col=activity))+geom_point()+labs(y="Mean Normalized max force", x="Angle")+ggtitle("Figure 1: Mean normalized Fmax vs Angle")
+```
+As we could see from this figure, for almost every each angle, the fatigue group's mean normalized max force is almost always higher than the control group's, which is interesting.
+To further answer the question:Is there a significant shift between θmax between the control and fatigue FL relationships? We need to construct polynomial models to estimate the maximum force 
+
+```{r  assess second, third, and fourth order polynomial models using AIC , echo= FALSE}
+AICs <- data_after_filter %>%
+  group_by(name,activity)%>%
+  summarize(
+    m2=AICc(lm(normF~poly(angle,2))),
+    m3=AICc(lm(normF~poly(angle,3))),
+    m4=AICc(lm(normF~poly(angle,4)))
+  )%>%
+  pivot_longer(m2:m4, names_to="model", values_to="AICc")
+```
+
+```{r, filter the model by finding by the lowest AICs, echo=FALSE}
+x.pred<-seq(45,157.5,length.out=1000)
+
+fits <- data_after_filter %>%
+  group_by(name, activity) %>%
+  summarize(
+    m2 = predict(lm(normF~poly(angle,2)),newdata = data.frame(angle = x.pred)), 
+    m3 = predict(lm(normF~poly(angle,3)),newdata = data.frame(angle = x.pred)), 
+    m4 = predict(lm(normF~poly(angle,4)),newdata = data.frame(angle = x.pred))) %>%
+   pivot_longer(m2:m4, names_to = "model") %>%
+   group_by(name, activity, model) %>%
+   summarize(theta_max = x.pred[which.max(value)])
+
+best.models <- fits %>%
+  left_join(AICs) %>%
+  group_by(name, activity) %>%
+  mutate(best = AICc == min(AICc)) %>%
+  filter(best==TRUE) %>%
+  dplyr::select(-best) %>%
+  print()
+
+```
+
+```{r anova test and shift calculating, echo = FALSE, warning = FALSE, message = FALSE}
+anova(lm(theta_max~activity,best.models)) %>%
+  print()
+
+best.models%>%
+  pivot_wider(id_cols=name,names_from = activity,values_from=theta_max)%>%
+  mutate(shift=fatigue-control)%>%
+  ungroup()%>%
+  summarize(mean.shift=mean(shift,na.rm=TRUE),se.shift=sd(shift,na.rm=TRUE)/sqrt(length(shift))) %>%
+  kable(caption="Table 1: Mean shift in theta max")%>%
+  print()
+```
+
+```{r visualize the shift of maximum angle,echo = FALSE, warning = FALSE, message = FALSE}
+shift<-best.models %>%
+  pivot_wider(id_cols= name, names_from=activity, values_from=theta_max)%>%
+  mutate(shift=fatigue-control)
+
+shift<-shift %>%
+  pivot_longer(cols=c("control","fatigue"), names_to = "Condition")
+
+shift %>%
+  ggplot(aes(x=name, y=value, fill=Condition)) + geom_bar(stat="identity", position="dodge", width=0.5)+ scale_x_discrete(labels=NULL)+theme_classic()+coord_flip()+ylab("Theta max")+ggtitle("Figure 2: Theta max for each individual subject")
+
+```
+figure 2 indicates that the theta max of the fatigue group is always larger than the theta max of the control group. This shows a significant angle shift between the control and fatigue group.
+
+## Discussion
+Our project aim to investigate whether force-angle data for isometric MVC accord to a typical FL relationship both under control and fatigued conditions and whether there is a significant shift between theta-max between the control and fatigue FL relationships. In general, our project specifically investigated how fatigue influences the force-length relationship in the upper limbs
+
+After data processing, we found that the angle at which the maximum contraction force is generated for the fatigue group is higher than the control group and we were able to identify approximately 14.7 degrees shifts between the the maximum force-producing angles between control and fatigure groups.
+
+In a paper by @philippou2009changes that investigates the angle shift in the quadriceps, isokinetic and isometric angle-torque curves towards longer muscle lengths was observed post-exercise (p<0.05). This indicates that the quadriceps exhibit a tendency to produce more force at longer muscle lengths post-exercise. This aligns with our data that an angle shift is observed during fatigue state in the upper limb, yet, our data is not significant. It may be hypothesize that force-length relationship in relation to exercise may be muscle-specific, which requires additional studies. 
 ```
 
 ## Author Contribution
