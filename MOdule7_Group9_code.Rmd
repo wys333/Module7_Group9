@@ -151,14 +151,14 @@ Our project aim to investigate whether force-angle data for isometric MVC accord
 After data processing, we found that the angle at which the maximum contraction force is generated for the fatigue group is higher than the control group and we were able to identify approximately 14.7 degrees shifts between the the maximum force-producing angles between control and fatigure groups.
 
 In a paper by @philippou2009changes that investigates the angle shift in the quadriceps, isokinetic and isometric angle-torque curves towards longer muscle lengths was observed post-exercise (p<0.05). This indicates that the quadriceps exhibit a tendency to produce more force at longer muscle lengths post-exercise. This aligns with our data that an angle shift is observed during fatigue state in the upper limb, yet, our data is not significant. It may be hypothesize that force-length relationship in relation to exercise may be muscle-specific, which requires additional studies. 
-```
+
 
 ## Author Contribution
 Nicole: finish introduction, reference search and methods. Aid Weihang in producing the code for data analysis
 
 Weihang: finish the code for data analysis
 
-Stacey: 
+Stacey: set up the DAQ and was in charge of data collection and upload.
 
 ## References
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
