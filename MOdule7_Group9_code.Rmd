@@ -82,10 +82,12 @@ mean_normalized_maxF<-data_after_filter%>%
 mean_normalized_maxF%>% 
   ggplot(aes(x=angle,y=Mean_Normalized_maxf,col=activity))+geom_point()+labs(y="Mean Normalized max force", x="Angle")+ggtitle("Figure 1: Mean normalized Fmax vs Angle")
 ```
-As we could see from this figure, for almost every each angle, the fatigue group's mean normalized max force is almost always higher than the control group's, which is interesting.
-To further answer the question:Is there a significant shift between θmax between the control and fatigue FL relationships? We need to construct polynomial models to estimate the maximum force 
 
-```{r  assess second, third, and fourth order polynomial models using AIC , echo= FALSE}
+
+As we could see from this figure, for almost every each angle, the fatigue group's mean normalized max force is almost always higher than the control group's, which is interesting.
+To further answer the question:Is there a significant shift between theta max between the control and fatigue FL relationships? We need to construct polynomial models to estimate the maximum force 
+
+```{r assess second, third, and fourth order polynomial models using AIC , echo= FALSE,warning = FALSE, message = FALSE}
 AICs <- data_after_filter %>%
   group_by(name,activity)%>%
   summarize(
@@ -96,7 +98,7 @@ AICs <- data_after_filter %>%
   pivot_longer(m2:m4, names_to="model", values_to="AICc")
 ```
 
-```{r, filter the model by finding by the lowest AICs, echo=FALSE}
+```{r, filter the model by finding by the lowest AICs, echo=FALSE,warning = FALSE, message = FALSE}
 x.pred<-seq(45,157.5,length.out=1000)
 
 fits <- data_after_filter %>%
@@ -114,8 +116,7 @@ best.models <- fits %>%
   group_by(name, activity) %>%
   mutate(best = AICc == min(AICc)) %>%
   filter(best==TRUE) %>%
-  dplyr::select(-best) %>%
-  print()
+  dplyr::select(-best) 
 
 ```
 
@@ -132,6 +133,8 @@ best.models%>%
   print()
 ```
 
+The theta angel change is 14.78 and the anova test has a p-value of 0.01981, which is statistically significant. 
+
 ```{r visualize the shift of maximum angle,echo = FALSE, warning = FALSE, message = FALSE}
 shift<-best.models %>%
   pivot_wider(id_cols= name, names_from=activity, values_from=theta_max)%>%
@@ -144,7 +147,8 @@ shift %>%
   ggplot(aes(x=name, y=value, fill=Condition)) + geom_bar(stat="identity", position="dodge", width=0.5)+ scale_x_discrete(labels=NULL)+theme_classic()+coord_flip()+ylab("Theta max")+ggtitle("Figure 2: Theta max for each individual subject")
 
 ```
-figure 2 indicates that the theta max of the fatigue group is always larger than the theta max of the control group. This shows a significant angle shift between the control and fatigue group.
+
+Figure 2 indicates that the theta max of the fatigue group is always larger than the theta max of the control group. This shows a significant angle shift between the control and fatigue group.
 
 ## Discussion
 Our project aim to investigate whether force-angle data for isometric MVC accord to a typical FL relationship both under control and fatigued conditions and whether there is a significant shift between theta-max between the control and fatigue FL relationships. In general, our project specifically investigated how fatigue influences the force-length relationship in the upper limbs
