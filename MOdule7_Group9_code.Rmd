@@ -42,6 +42,8 @@ Each group member performs isokinetic controlled drops of a heavy object weighin
 Each group member start with the book bag with the hand not participating in the experiment and transfer it to the other hand while fully flexing the forearm (bicep curls). Once the bag is in the hand designated for the experiment, gradually and consistently lower the bag. When the arm is fully extended, grasp the book bag with the free hand and proceed to flex the forearm being studied. Repeat the process by passing the bag back to the study hand. Maintain a continuous repetition of this exercise for a duration of 3 minutes, ensuring the cycles are consistently timed by monitoring the duration, ideally around 3-4 seconds per cycle. Each member is tired at the end of the trial.
 After each person fatigue their flexors, wait 2 min. Then repeat the experiment exactly as one did for the control data.
 
+
+
 ## Results
 ```{r cars}
 summary(cars)
