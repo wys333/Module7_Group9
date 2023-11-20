@@ -5,9 +5,6 @@ date: "2023-11-19"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ## Introduction
 The force-length relationship of muscle function is directly related to actin-myosin overlap in sacromere -- the limited formation of cross bridges due to attachment range. The maximal isometric force produced is directly related to cross bridges formation. 
@@ -22,22 +19,22 @@ To investigate the effect of eccentric fatigue of elbow flexor muscles, the isom
 
 ## Methods
 
-#Assembling the DAQ
+### Assembling the DAQ
 an 100-kg S-type Load Cell with HX711 amplifier and an Arduino Uno microcontroller are provided by Prof. Kenaley and are wired together by the group.
 
-#constructing a ganiometer 
+### constructing a ganiometer 
 A small disc is outlined and cut from a piece of cardboard. The circle is separated into equal segments with a protractor from 45-157.25 degrees with a 11.25 degree of increments. 
 
-#using a geniometer
+### using a geniometer
 Locate the center of the elbow joint in lateral view and designate this position with a marker. Draw a line along the lateral margin of the radius starting from the marked location. Pierce a hole through the center of the goniometer and attach it to the upper arm in such a way that its center aligns with your mark at the elbow joint, and the 0-180 axis corresponds with the long axis of the humerus.
 
-#collect isometric force data from MVCs (setup)
+### collecting isometric force data from MVCs (setup)
 The load-cell is affixed to a wooden or plastic dowel with a zip tie at one end and has a looped zip tie attached to the other. Pass the looped zip tie around the provided C-clamp and fasten the clamp to a table at O'neill library that won’t move under the torque of your forearm. The elbow is supported by the table. 
 
-#collect control isometric force data from MVCs
+### collecting control isometric force data from MVCs
 start the data collection at the largest arm angle, 157.5. At each angle, flex the elbow as hard as you can to produce a MVC, resetting your DAQ system each time.
 
-#collect isometric force data from MVCs after eccesntric fatigue
+### collecting isometric force data from MVCs after eccesntric fatigue
 Each group member performs isokinetic controlled drops of a heavy object weighing 1/3 of maximum isometric force recorded in the control experiments. In this case, each group member performed bicep curls with dominant hand using our own backpack (each contains one laptop and one ipad). 
 Each group member start with the book bag with the hand not participating in the experiment and transfer it to the other hand while fully flexing the forearm (bicep curls). Once the bag is in the hand designated for the experiment, gradually and consistently lower the bag. When the arm is fully extended, grasp the book bag with the free hand and proceed to flex the forearm being studied. Repeat the process by passing the bag back to the study hand. Maintain a continuous repetition of this exercise for a duration of 3 minutes, ensuring the cycles are consistently timed by monitoring the duration, ideally around 3-4 seconds per cycle. Each member is tired at the end of the trial.
 After each person fatigue their flexors, wait 2 min. Then repeat the experiment exactly as one did for the control data.
