@@ -43,7 +43,6 @@ Each group member start with the book bag with the hand not participating in the
 After each person fatigue their flexors, wait 2 min. Then repeat the experiment exactly as one did for the control data.
 
 
-
 ## Results
 ```{r cars}
 summary(cars)
@@ -56,6 +55,11 @@ plot(pressure)
 ```
 
 ## Author Contribution
+Nicole: finish introduction, reference search and methods. Aid Weihang in producing the code for data analysis
+
+Weihang: finish the code for data analysis
+
+Stacey: 
 
 ## References
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
