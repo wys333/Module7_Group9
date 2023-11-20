@@ -1,0 +1,40 @@
+---
+title: "Module7_Group9"
+author: "Nicole Wei"
+date: "2023-11-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The force-length relationship of muscle function is directly related to actin-myosin overlap in sacromere -- the limited formation of cross bridges due to attachment range. The maximal isometric force produced is directly related to cross bridges formation. 
+
+The human upper limb transect a lever system, though the mechanical advantage (MA) that predicts the amount of output transmitted by the input force generally accords to 0.2 in the system. This indicates that any force applied to the in-level results in 20% of that force at the end of the out-level. However, because the angle changes as the forearm rotates, the output is not entirely predictable by MA alone. According to paper on uncovering the FL relationships of the input muscles (@article{rassier1999length), physiologists Rassier, Macintosh, and Herzog have found that studying the force produced by a biomechanical system can still be useful. As a result, we underline the assumption that the force we measure at the hand as the muscle produces isometric force at various lengths is a reasonable reflection of the FL relationship in this study.
+
+It has previously been shown in the article by Yeung and Yeung in 2008 that the force/torque-length/angle relationship shifts soon after and long after eccentric fatigue (@article{yeung2007shift). In this study, we aim to continue investigating th e FL relationship within the human upper limb, particularly honing in on the forearm flexors and their response to eccentric fatigue:
+  1) Does the isometric maximum voluntary contraction (MVC) force-angle data across the entire class align with a standard FL relationship, both in control and fatigued states?
+  2) Is there a significant difference in the θmax between the FL relationships of the control and fatigue conditions?
+
+To investigate the effect of eccentric fatigue of elbow flexor muscles, the isometric force over the range of motion of the forearm produced by maximum voluntary contraction (MCV) is measured by a portable Arduino-based force-data acquisition system (DAQ) and the data is analyzed 
+
+## Methods
+
+## Results
+```{r cars}
+summary(cars)
+```
+
+## Discussion
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+## Author Contribution
+
+## References
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
